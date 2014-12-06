@@ -1,0 +1,29 @@
+android create project \
+--target 4 \
+--name StressRelief \
+--path ~/StressRelief \
+--activity Main \
+--package com.amfern.stressrelief
+
+adb connect 192.168.1.233
+
+gradle installDebug
+
+gradle uninstallAll
+
+if you upgrade libgdx, you have to update native files in jniLibs as-well
+
+
+
+
+
+
+
+
+
+
+
+TODO:
+load character in fbx format with mesh, textures and skeleton
+move character bones according to input
+create damp function when moving the bones so they follow the input and return to natural place

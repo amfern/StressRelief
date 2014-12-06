@@ -5,12 +5,10 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:1.0.0-rc1'
-        classpath 'com.nabilhachicha:android-native-dependencies:0.1+'
     }
 }
 
 apply plugin: 'android'
-apply plugin: 'android-native-dependencies'
 
 android {
     buildToolsVersion "21.0.2"

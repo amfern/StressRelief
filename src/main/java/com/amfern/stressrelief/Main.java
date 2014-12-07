@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
@@ -36,14 +37,14 @@ class Game implements ApplicationListener {
 
     private void createCamera() {
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(10f, 10f, 10f);
-        cam.lookAt(0,0,0);
+        cam.position.set(0, 10f, 10f);
+        cam.lookAt(0,5f,0);
         cam.near = 1f;
         cam.far = 300f;
         cam.update();
 
-        camController = new CameraInputController(cam);
-        Gdx.input.setInputProcessor(camController);
+        // camController = new CameraInputController(cam);
+        // Gdx.input.setInputProcessor(camController);
     }
 
     private void createLight() {
@@ -52,15 +53,23 @@ class Game implements ApplicationListener {
     }
 
     private void loadAsset() {
-        assets.load("kat_hood_up.g3db", Model.class);
+        assets.load("butt.g3dj", Model.class);
         loading = true;
     }
 
     private void doneLoaing() {
-        Model ship = assets.get("kat_hood_up.g3db", Model.class);
-        ModelInstance shipInstance = new ModelInstance(ship); 
-        instances.add(shipInstance);
+        Model katModel = assets.get("butt.g3dj", Model.class);
+        ModelInstance katInstance = new ModelInstance(katModel); 
+        instances.add(katInstance);
         loading = false;
+        
+        // Node node = katInstance.getNode("rdmobj04");
+
+        // katInstance.transform.set(node.globalTransform);
+        // node.translation.set(5f,0,0);
+        // // node.scale.set(1,1,1);
+        // // node.rotation.idt();
+        // katInstance.calculateTransforms();
     }
 
     @Override
@@ -79,7 +88,7 @@ class Game implements ApplicationListener {
         if(loading && assets.update())
             doneLoaing();
 
-        camController.update();
+        // camController.update();
         
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

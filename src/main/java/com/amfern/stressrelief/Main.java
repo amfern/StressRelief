@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector3;
 
 
 class Game implements ApplicationListener {
@@ -34,6 +35,8 @@ class Game implements ApplicationListener {
     private Array<ModelInstance> instances = new Array<ModelInstance>();
     private CameraInputController camController;
     private boolean loading;
+    private Node leftButtNode;
+    private Node rightButtNode;
 
     private void createCamera() {
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -42,9 +45,6 @@ class Game implements ApplicationListener {
         cam.near = 1f;
         cam.far = 300f;
         cam.update();
-
-        // camController = new CameraInputController(cam);
-        // Gdx.input.setInputProcessor(camController);
     }
 
     private void createLight() {
@@ -58,19 +58,44 @@ class Game implements ApplicationListener {
     }
 
     private void doneLoaing() {
-        Model katModel = assets.get("butt.g3dj", Model.class);
-        ModelInstance katInstance = new ModelInstance(katModel); 
-        instances.add(katInstance);
+        Model buttModel = assets.get("butt.g3dj", Model.class);
+        ModelInstance buttInstance = new ModelInstance(buttModel); 
+        instances.add(buttInstance);
         loading = false;
         
-        // Node node = katInstance.getNode("rdmobj04");
-
-        // katInstance.transform.set(node.globalTransform);
-        // node.translation.set(5f,0,0);
-        // // node.scale.set(1,1,1);
-        // // node.rotation.idt();
-        // katInstance.calculateTransforms();
+        leftButtNode = buttInstance.getNode("leftButt");
+        rightButtNode = buttInstance.getNode("rightButt");
     }
+
+    private void moveNode(Node node, int deltaX, int deltaY) {
+        node.translation.x += deltaX * 0.001f;
+        node.translation.y += -deltaY * 0.001f;
+    }
+
+    private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
+        Vector3 globaLeftButtlPosition = new Vector3();
+        Vector3 globaRightButtlPosition = new Vector3();
+
+        // unproject world coordinates to screen
+        leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
+        rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
+
+        Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
+        Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
+        
+        // find closes screen coordinate
+        Vector3 screenCoord = new Vector3(screenX, screenY, 0);
+        float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
+        float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
+
+        // move the related node
+        if(leftButtNodeDst > rightButtNodeDst) {
+            moveNode(rightButtNode, deltaX, deltaY);
+        } else {
+            moveNode(leftButtNode, deltaX, deltaY);
+        }
+    }
+
 
     @Override
     public void create() {
@@ -88,8 +113,20 @@ class Game implements ApplicationListener {
         if(loading && assets.update())
             doneLoaing();
 
-        // camController.update();
-        
+        if(Gdx.input.isTouched(0)) {
+            int deltaX = Gdx.input.getDeltaX();
+            int deltaY = Gdx.input.getDeltaY();
+            int screenX = Gdx.input.getX();
+            int screenY = Gdx.input.getY();
+
+            moveClosestNode(deltaX, deltaY, screenX, screenY);
+        }
+
+
+        for(int i = 0; i < instances.size; i++) {
+            instances.get(i).calculateTransforms();
+        }
+
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 

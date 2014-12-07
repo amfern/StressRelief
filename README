@@ -24,7 +24,5 @@ if you upgrade libgdx, you have to update native files in jniLibs as-well
 
 
 TODO:
-load character in fbx format with mesh, textures and skeleton - done
-create smaple chareacter with ass polygon, bones, and skining
-move character bones according to input
+move selected ass cheeck by touching it
 create damp function when moving the bones so they follow the input and return to natural place

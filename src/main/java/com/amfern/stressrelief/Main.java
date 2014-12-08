@@ -25,6 +25,8 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Interpolation.Elastic;
 
 
 class Game implements ApplicationListener {
@@ -37,6 +39,9 @@ class Game implements ApplicationListener {
     private boolean loading;
     private Node leftButtNode;
     private Node rightButtNode;
+
+    private Vector3 nodeLeftInitialPosition;
+    private Vector3 nodeRightInitialPosition;
 
     private void createCamera() {
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -65,6 +70,17 @@ class Game implements ApplicationListener {
         
         leftButtNode = buttInstance.getNode("leftButt");
         rightButtNode = buttInstance.getNode("rightButt");
+
+        nodeLeftInitialPosition = leftButtNode.translation.cpy();
+        nodeRightInitialPosition = rightButtNode.translation.cpy();
+    }
+
+    private Vector3 interpolatePositions(Vector3 initialPos, Vector3 curretPos) {
+        return curretPos.interpolate(initialPos, 0.5f, Interpolation.elastic);
+    }
+
+    private void interpolateElasticAssNode(Node node, Vector3 initialPos) {
+        node.translation.set(node.translation.lerp(initialPos, 0.3f));
     }
 
     private void moveNode(Node node, int deltaX, int deltaY) {
@@ -97,6 +113,19 @@ class Game implements ApplicationListener {
     }
 
 
+    private void renderScene() {
+        for(int i = 0; i < instances.size; i++) {
+            instances.get(i).calculateTransforms();
+        }
+
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        modelBatch.begin(cam);
+        modelBatch.render(instances, environment);
+        modelBatch.end();
+    }
+
     @Override
     public void create() {
         environment = new Environment();
@@ -110,8 +139,13 @@ class Game implements ApplicationListener {
 
     @Override
     public void render() {
-        if(loading && assets.update())
+        if(loading && assets.update()) {
             doneLoaing();
+        }
+
+        if(loading) {
+            return;
+        }
 
         if(Gdx.input.isTouched(0)) {
             int deltaX = Gdx.input.getDeltaX();
@@ -120,19 +154,12 @@ class Game implements ApplicationListener {
             int screenY = Gdx.input.getY();
 
             moveClosestNode(deltaX, deltaY, screenX, screenY);
+        } else {
+            interpolateElasticAssNode(leftButtNode, nodeLeftInitialPosition);
+            interpolateElasticAssNode(rightButtNode, nodeRightInitialPosition);
         }
 
-
-        for(int i = 0; i < instances.size; i++) {
-            instances.get(i).calculateTransforms();
-        }
-
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        modelBatch.begin(cam);
-        modelBatch.render(instances, environment);
-        modelBatch.end();
+        renderScene();
     }
 
     public void dispose() {

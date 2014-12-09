@@ -12,17 +12,3 @@ gradle installDebug
 gradle uninstallAll
 
 if you upgrade libgdx, you have to update native files in jniLibs as-well
-
-
-
-
-
-
-
-
-
-
-
-TODO:
-move selected ass cheeck by touching it
-create damp function when moving the bones so they follow the input and return to natural place

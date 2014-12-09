@@ -30,142 +30,56 @@ import com.badlogic.gdx.math.Interpolation.Elastic;
 
 
 class Game implements ApplicationListener {
-    private Environment environment;
-    private PerspectiveCamera cam;
-    private ModelBatch modelBatch;
-    private AssetManager assets;
-    private Array<ModelInstance> instances = new Array<ModelInstance>();
-    private CameraInputController camController;
-    private boolean loading;
-    private Node leftButtNode;
-    private Node rightButtNode;
+    private AssCharacter assChar;
+    private Scene scene;
+    // private Environment environment;
+    // private PerspectiveCamera cam;
+    
+    // private AssetManager assets;
+    // private CameraInputController camController;
+    
+    // private Node leftButtNode;
+    // private Node rightButtNode;
 
-    private Vector3 nodeLeftInitialPosition;
-    private Vector3 nodeRightInitialPosition;
-
-    private void createCamera() {
-        cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(0, 10f, 10f);
-        cam.lookAt(0,5f,0);
-        cam.near = 1f;
-        cam.far = 300f;
-        cam.update();
-    }
-
-    private void createLight() {
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-    }
-
-    private void loadAsset() {
-        assets.load("butt.g3dj", Model.class);
-        loading = true;
-    }
-
-    private void doneLoaing() {
-        Model buttModel = assets.get("butt.g3dj", Model.class);
-        ModelInstance buttInstance = new ModelInstance(buttModel); 
-        instances.add(buttInstance);
-        loading = false;
-        
-        leftButtNode = buttInstance.getNode("leftButt");
-        rightButtNode = buttInstance.getNode("rightButt");
-
-        nodeLeftInitialPosition = leftButtNode.translation.cpy();
-        nodeRightInitialPosition = rightButtNode.translation.cpy();
-    }
-
-    private Vector3 interpolatePositions(Vector3 initialPos, Vector3 curretPos) {
-        return curretPos.interpolate(initialPos, 0.5f, Interpolation.elastic);
-    }
-
-    private void interpolateElasticAssNode(Node node, Vector3 initialPos) {
-        node.translation.set(node.translation.lerp(initialPos, 0.3f));
-    }
-
-    private void moveNode(Node node, int deltaX, int deltaY) {
-        node.translation.x += deltaX * 0.001f;
-        node.translation.y += -deltaY * 0.001f;
-    }
-
-    private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
-        Vector3 globaLeftButtlPosition = new Vector3();
-        Vector3 globaRightButtlPosition = new Vector3();
-
-        // unproject world coordinates to screen
-        leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
-        rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
-
-        Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
-        Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
-        
-        // find closes screen coordinate
-        Vector3 screenCoord = new Vector3(screenX, screenY, 0);
-        float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
-        float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
-
-        // move the related node
-        if(leftButtNodeDst > rightButtNodeDst) {
-            moveNode(rightButtNode, deltaX, deltaY);
-        } else {
-            moveNode(leftButtNode, deltaX, deltaY);
-        }
-    }
+    // private Vector3 nodeLeftInitialPosition;
+    // private Vector3 nodeRightInitialPosition;
 
 
-    private void renderScene() {
-        for(int i = 0; i < instances.size; i++) {
-            instances.get(i).calculateTransforms();
-        }
-
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        modelBatch.begin(cam);
-        modelBatch.render(instances, environment);
-        modelBatch.end();
-    }
 
     @Override
     public void create() {
-        environment = new Environment();
-        modelBatch = new ModelBatch();
-        assets = new AssetManager();
+        // environment = new Environment();
+        
+        // assets = new AssetManager();
 
-        createLight();
-        createCamera();
-        loadAsset();
+        // createLight();
+        // createCamera();
+        // loadAsset();
     }
 
     @Override
     public void render() {
-        if(loading && assets.update()) {
-            doneLoaing();
-        }
 
-        if(loading) {
-            return;
-        }
+        assChar.updateAnimations();
 
-        if(Gdx.input.isTouched(0)) {
-            int deltaX = Gdx.input.getDeltaX();
-            int deltaY = Gdx.input.getDeltaY();
-            int screenX = Gdx.input.getX();
-            int screenY = Gdx.input.getY();
 
-            moveClosestNode(deltaX, deltaY, screenX, screenY);
-        } else {
-            interpolateElasticAssNode(leftButtNode, nodeLeftInitialPosition);
-            interpolateElasticAssNode(rightButtNode, nodeRightInitialPosition);
-        }
+        Array<ModelIntances> instances = new Array<ModelIntances>({
+            assChar.getModelInstance()
+        })
 
-        renderScene();
-    }
+        scene.renderInstances(instances);
 
-    public void dispose() {
-        modelBatch.dispose();
-        instances.clear();
-        assets.dispose();
+        // if(Gdx.input.isTouched(0)) {
+        //     int deltaX = Gdx.input.getDeltaX();
+        //     int deltaY = Gdx.input.getDeltaY();
+        //     int screenX = Gdx.input.getX();
+        //     int screenY = Gdx.input.getY();
+
+        //     moveClosestNode(deltaX, deltaY, screenX, screenY);
+        // } else {
+        //     interpolateElasticAssNode(leftButtNode, nodeLeftInitialPosition);
+        //     interpolateElasticAssNode(rightButtNode, nodeRightInitialPosition);
+        // }
     }
     
     @Override
@@ -190,6 +104,9 @@ public class Main extends AndroidApplication {
         cfg.useAccelerometer = false;
         cfg.useCompass = false;
 
+        // Loader loads all the AssChareacters and populates modelInstances array
+        initialize(new Loader(), cfg);
+        initialize(new (), cfg);
         initialize(new Game(), cfg);
     }
 }

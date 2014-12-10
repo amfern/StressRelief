@@ -8,6 +8,12 @@ public class AssInstance extends ModelInstance {
     // constructor
     public AssInstance(Model model) {
         super(model);
+
+        // leftButtNode = buttInstance.getNode("leftButt");
+        // rightButtNode = buttInstance.getNode("rightButt");
+
+        // nodeLeftInitialPosition = leftButtNode.translation.cpy();
+        // nodeRightInitialPosition = rightButtNode.translation.cpy();
     }
 
     // animations
@@ -58,19 +64,17 @@ public class AssInstance extends ModelInstance {
 
 // import com.badlogic.gdx.graphics.Color;
 // import com.badlogic.gdx.graphics.GL20;
-// import com.badlogic.gdx.graphics.PerspectiveCamera;
+
 // import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 // import com.badlogic.gdx.graphics.g3d.Environment;
 // import com.badlogic.gdx.graphics.g3d.Model;
 // import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
-// import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-// import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+
 // import com.badlogic.gdx.graphics.g3d.model.Node;
 // import com.badlogic.gdx.graphics.g3d.Material;
 // import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 // import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-// import com.badlogic.gdx.utils.Array;
 // import com.badlogic.gdx.math.Vector3;
 // import com.badlogic.gdx.math.Interpolation;
 // import com.badlogic.gdx.math.Interpolation.Elastic;
@@ -87,32 +91,6 @@ public class AssInstance extends ModelInstance {
 
 
 
-//     if(loading && assets.update()) {
-//         doneLoaing();
-//     }
-
-//     if(loading) {
-//         return;
-//     }
-
-
-//     private void loadAsset() {
-//         assets.load("butt.g3dj", Model.class);
-//         loading = true;
-//     }
-
-//     private void doneLoaing() {
-//         Model buttModel = assets.get("butt.g3dj", Model.class);
-//         ModelInstance buttInstance = new ModelInstance(buttModel); 
-//         instances.add(buttInstance);
-//         loading = false;
-        
-//         leftButtNode = buttInstance.getNode("leftButt");
-//         rightButtNode = buttInstance.getNode("rightButt");
-
-//         nodeLeftInitialPosition = leftButtNode.translation.cpy();
-//         nodeRightInitialPosition = rightButtNode.translation.cpy();
-//     }
 
 //     public AssCharacter create() {
 

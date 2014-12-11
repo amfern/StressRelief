@@ -30,15 +30,15 @@ public class AssInstance extends ModelInstance {
     }
 
     public void playBounce() {
-        Log.w("stressrelief", "playing bounce animation");
+        Log.w("stressrelief", "playing animation: playBounce");
     }
 
     public void playLeftFlick() {
-        
+        Log.w("stressrelief", "playing animation: playLeftFlick");
     }
 
     public void playRightFlick() {
-        
+        Log.w("stressrelief", "playing animation: playRightFlick");
     }
 
     // updates the animations

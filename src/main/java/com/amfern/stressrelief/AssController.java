@@ -10,6 +10,11 @@ import com.badlogic.gdx.Gdx;
 // import com.badlogic.gdx.input;
 
 
+enum AssChick {
+    LEFT,
+    RIGHT
+}
+
 public class AssController extends GestureAdapter {
     AssInstance assInstance;
 
@@ -18,54 +23,65 @@ public class AssController extends GestureAdapter {
         Gdx.input.setInputProcessor( new GestureDetector(this) );
     }
 
-    // @Override
-    // public boolean touchDown(float x, float y, int pointer, int button) {
+    private AssChick getClosestdChick(float x, float y, AssInstance assInstance) {
+        // private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
+        //     Vector3 globaLeftButtlPosition = new Vector3();
+        //     Vector3 globaRightButtlPosition = new Vector3();
 
-    //     return false;
-    // }
+        //     // unproject world coordinates to screen
+        //     leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
+        //     rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
 
-    // @Override
-    // public boolean tap(float x, float y, int count, int button) {
+        //     Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
+        //     Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
+            
+        //     // find closes screen coordinate
+        //     Vector3 screenCoord = new Vector3(screenX, screenY, 0);
+        //     float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
+        //     float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
 
-    //     return false;
-    // }
+        //     // move the related node
+        //     if(leftButtNodeDst > rightButtNodeDst) {
+        //         moveNode(rightButtNode, deltaX, deltaY);
+        //     } else {
+        //         moveNode(leftButtNode, deltaX, deltaY);
+        //     }
+        // }
+        // 
+        return AssChick.LEFT;
+    }
 
-    // @Override
-    // public boolean longPress(float x, float y) {
-
-    //     return false;
-    // }
-
-    @Override
-    public boolean fling(float velocityX, float velocityY, int button) {
-        assInstance.playBounce();
-
+    // checks if the touch occured on mesh
+    private boolean isTouchedMesh(float x, float y, AssInstance assInstance) {
         return true;
     }
 
-    // @Override
-    // public boolean pan(float x, float y, float deltaX, float deltaY) {
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        if(!isTouchedMesh(x, y, assInstance))
+            return false;
 
-    //     return false;
-    // }
+        switch( getClosestdChick(x, y, assInstance) ) {
+            case LEFT:
+                assInstance.playLeftFlick();
+                break;
+            case RIGHT:
+                assInstance.playRightFlick();
+                break;
+        }
+        
+        return true;
+    }
 
-    // @Override
-    // public boolean panStop(float x, float y, int pointer, int button) {
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        // play bouse animation only on up fling and on mesh touch
+        if(!isTouchedMesh(velocityX, velocityY, assInstance) || velocityY > 0)
+            return false;
 
-    //     return false;
-    // }
-
-    // @Override
-    // public boolean zoom (float originalDistance, float currentDistance){
-
-    //    return false;
-    // }
-
-    // @Override
-    // public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer){
-
-    //    return false;
-    // }
+        assInstance.playBounce();
+        return true;
+    }
 }
 
 
@@ -106,28 +122,3 @@ public class AssController extends GestureAdapter {
 //     //     node.translation.x += deltaX * 0.001f;
 //     //     node.translation.y += -deltaY * 0.001f;
 //     // }
-
-//     // private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
-//     //     Vector3 globaLeftButtlPosition = new Vector3();
-//     //     Vector3 globaRightButtlPosition = new Vector3();
-
-//     //     // unproject world coordinates to screen
-//     //     leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
-//     //     rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
-
-//     //     Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
-//     //     Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
-        
-//     //     // find closes screen coordinate
-//     //     Vector3 screenCoord = new Vector3(screenX, screenY, 0);
-//     //     float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
-//     //     float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
-
-//     //     // move the related node
-//     //     if(leftButtNodeDst > rightButtNodeDst) {
-//     //         moveNode(rightButtNode, deltaX, deltaY);
-//     //     } else {
-//     //         moveNode(leftButtNode, deltaX, deltaY);
-//     //     }
-//     // }
-// }

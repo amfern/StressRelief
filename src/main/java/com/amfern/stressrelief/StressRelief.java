@@ -6,12 +6,13 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 class StressRelief extends Game implements LoadingScreenListener {
+    AssController assController;
+
     @Override
     public void doneLoading(Model assModel) {
         AssInstance assInstance = new AssInstance(assModel);
-        ModelInstance[] instances = new ModelInstance[]{ assInstance };
-
-        setScreen( new GameScreen(instances) );
+        assController = new AssController(assInstance);
+        setScreen( new GameScreen(assInstance) );
     }
 
     @Override

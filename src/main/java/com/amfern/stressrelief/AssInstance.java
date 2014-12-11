@@ -1,9 +1,16 @@
 package com.amfern.stressrelief;
 
+import android.util.Log;
+
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 public class AssInstance extends ModelInstance {
+    // private Node leftButtNode;
+    // private Node rightButtNode;
+
+    // private Vector3 nodeLeftInitialPosition;
+    // private Vector3 nodeRightInitialPosition;
 
     // constructor
     public AssInstance(Model model) {
@@ -23,7 +30,7 @@ public class AssInstance extends ModelInstance {
     }
 
     public void playBounce() {
-        
+        Log.w("stressrelief", "playing bounce animation");
     }
 
     public void playLeftFlick() {
@@ -39,124 +46,3 @@ public class AssInstance extends ModelInstance {
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import com.badlogic.gdx.graphics.Color;
-// import com.badlogic.gdx.graphics.GL20;
-
-// import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-// import com.badlogic.gdx.graphics.g3d.Environment;
-// import com.badlogic.gdx.graphics.g3d.Model;
-// import com.badlogic.gdx.graphics.g3d.ModelBatch;
-
-
-// import com.badlogic.gdx.graphics.g3d.model.Node;
-// import com.badlogic.gdx.graphics.g3d.Material;
-// import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-// import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-// import com.badlogic.gdx.math.Vector3;
-// import com.badlogic.gdx.math.Interpolation;
-// import com.badlogic.gdx.math.Interpolation.Elastic;
-// import com.badlogic.gdx.input;
-
-// public class AssCharacter extends ModelInstance implements GestureListener {
-
-//     // private Node leftButtNode;
-//     // private Node rightButtNode;
-
-//     // private Vector3 nodeLeftInitialPosition;
-//     // private Vector3 nodeRightInitialPosition;
-
-
-
-
-
-//     public AssCharacter create() {
-
-//     }
-
-
-
-
-
-
-
-
-
-
-
-    
-//     public void update() {
-//         // if(Gdx.input.isTouched(0)) {
-//         //     int deltaX = Gdx.input.getDeltaX();
-//         //     int deltaY = Gdx.input.getDeltaY();
-//         //     int screenX = Gdx.input.getX();
-//         //     int screenY = Gdx.input.getY();
-
-//         //     moveClosestNode(deltaX, deltaY, screenX, screenY);
-//         // } else {
-//         //     interpolateElasticAssNode(leftButtNode, nodeLeftInitialPosition);
-//         //     interpolateElasticAssNode(rightButtNode, nodeRightInitialPosition);
-//         // }
-//     }
-
-//     // instances.get(i).calculateTransforms();
-
-//     // private Vector3 interpolatePositions(Vector3 initialPos, Vector3 curretPos) {
-//     //     return curretPos.interpolate(initialPos, 0.5f, Interpolation.elastic);
-//     // }
-
-//     // private void interpolateElasticAssNode(Node node, Vector3 initialPos) {
-//     //     node.translation.set(node.translation.lerp(initialPos, 0.3f));
-//     // }
-
-//     // private void moveNode(Node node, int deltaX, int deltaY) {
-//     //     node.translation.x += deltaX * 0.001f;
-//     //     node.translation.y += -deltaY * 0.001f;
-//     // }
-
-//     // private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
-//     //     Vector3 globaLeftButtlPosition = new Vector3();
-//     //     Vector3 globaRightButtlPosition = new Vector3();
-
-//     //     // unproject world coordinates to screen
-//     //     leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
-//     //     rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
-
-//     //     Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
-//     //     Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
-        
-//     //     // find closes screen coordinate
-//     //     Vector3 screenCoord = new Vector3(screenX, screenY, 0);
-//     //     float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
-//     //     float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
-
-//     //     // move the related node
-//     //     if(leftButtNodeDst > rightButtNodeDst) {
-//     //         moveNode(rightButtNode, deltaX, deltaY);
-//     //     } else {
-//     //         moveNode(leftButtNode, deltaX, deltaY);
-//     //     }
-//     // }
-// }

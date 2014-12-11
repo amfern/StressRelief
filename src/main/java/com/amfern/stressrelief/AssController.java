@@ -1,13 +1,14 @@
 package com.amfern.stressrelief;
 
+import android.util.Log;
+
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 import com.badlogic.gdx.Gdx;
-
-// import com.badlogic.gdx.math.Vector3;
-// import com.badlogic.gdx.math.Interpolation;
-// import com.badlogic.gdx.math.Interpolation.Elastic;
-// import com.badlogic.gdx.input;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 
 enum AssChick {
@@ -16,52 +17,58 @@ enum AssChick {
 }
 
 public class AssController extends GestureAdapter {
+    boolean isTouched = false;
     AssInstance assInstance;
+    Camera cam;
 
-    public AssController(AssInstance assInstance) {
+    public AssController(AssInstance assInstance, Camera cam) {
         this.assInstance = assInstance;
+        this.cam = cam;
         Gdx.input.setInputProcessor( new GestureDetector(this) );
     }
 
-    private AssChick getClosestdChick(float x, float y, AssInstance assInstance) {
-        // private void moveClosestNode(int deltaX, int deltaY, int screenX, int screenY) {
-        //     Vector3 globaLeftButtlPosition = new Vector3();
-        //     Vector3 globaRightButtlPosition = new Vector3();
+    private float dstPointNode(Vector3 point, Node node) {
+        Vector3 nodePos = new Vector3();
+        node.globalTransform.getTranslation(nodePos);
 
-        //     // unproject world coordinates to screen
-        //     leftButtNode.globalTransform.getTranslation(globaLeftButtlPosition);
-        //     rightButtNode.globalTransform.getTranslation(globaRightButtlPosition);
-
-        //     Vector3 leftButtScreenCoords = cam.project(globaLeftButtlPosition);
-        //     Vector3 rightButtScreenCoords = cam.project(globaRightButtlPosition);
-            
-        //     // find closes screen coordinate
-        //     Vector3 screenCoord = new Vector3(screenX, screenY, 0);
-        //     float leftButtNodeDst = leftButtScreenCoords.dst2(screenCoord);
-        //     float rightButtNodeDst = rightButtScreenCoords.dst2(screenCoord);
-
-        //     // move the related node
-        //     if(leftButtNodeDst > rightButtNodeDst) {
-        //         moveNode(rightButtNode, deltaX, deltaY);
-        //     } else {
-        //         moveNode(leftButtNode, deltaX, deltaY);
-        //     }
-        // }
-        // 
-        return AssChick.LEFT;
+        return point.dst2(nodePos);
     }
 
+    private AssChick getClosestdChick(Vector3 touchWorldCoord, AssInstance assInstance) {
+        Node leftChick = assInstance.getLeftChick();
+        Node rightChick = assInstance.getRightChick();
+        float dstLeft = dstPointNode(touchWorldCoord, leftChick);
+        float dstRight = dstPointNode(touchWorldCoord, rightChick);
+
+        Log.w("stressrelief", "touchWorldCoord: " + touchWorldCoord);
+        Log.w("stressrelief", "dstLeft: " + dstLeft);
+        Log.w("stressrelief", "dstRight: " + dstRight);
+
+        return dstLeft < dstRight ? AssChick.LEFT : AssChick.RIGHT;
+    }
+    
     // checks if the touch occured on mesh
-    private boolean isTouchedMesh(float x, float y, AssInstance assInstance) {
-        return true;
+    private boolean isTouchedAss(float x, float y, AssInstance assInstance) {
+        Ray ray = cam.getPickRay(x, y);
+        Vector3 intersection = new Vector3();
+
+        return assInstance.intersectRayAss(ray, intersection);
+    }
+
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+        isTouched = isTouchedAss(x, y, assInstance);
+        return false;
     }
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
-        if(!isTouchedMesh(x, y, assInstance))
+        if(!isTouched)
             return false;
 
-        switch( getClosestdChick(x, y, assInstance) ) {
+        Vector3 touchWorldCoord = cam.unproject(new Vector3(x, y, 1f));
+
+        switch( getClosestdChick(touchWorldCoord, assInstance) ) {
             case LEFT:
                 assInstance.playLeftFlick();
                 break;
@@ -70,16 +77,19 @@ public class AssController extends GestureAdapter {
                 break;
         }
         
+        isTouched = false;
         return true;
     }
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
         // play bouse animation only on up fling and on mesh touch
-        if(!isTouchedMesh(velocityX, velocityY, assInstance) || velocityY > 0)
+        if(!isTouched || velocityY > 0)
             return false;
 
         assInstance.playBounce();
+        
+        isTouched = false;
         return true;
     }
 }
@@ -90,23 +100,14 @@ public class AssController extends GestureAdapter {
 
 
 
-
-
+// import com.badlogic.gdx.math.Interpolation;
+// import com.badlogic.gdx.math.Interpolation.Elastic;
+// import com.badlogic.gdx.input;
 
     
-//     public void update() {
-//         // if(Gdx.input.isTouched(0)) {
-//         //     int deltaX = Gdx.input.getDeltaX();
-//         //     int deltaY = Gdx.input.getDeltaY();
-//         //     int screenX = Gdx.input.getX();
-//         //     int screenY = Gdx.input.getY();
 
-//         //     moveClosestNode(deltaX, deltaY, screenX, screenY);
-//         // } else {
 //         //     interpolateElasticAssNode(leftButtNode, nodeLeftInitialPosition);
 //         //     interpolateElasticAssNode(rightButtNode, nodeRightInitialPosition);
-//         // }
-//     }
 
 //     // instances.get(i).calculateTransforms();
 

@@ -16,6 +16,10 @@ public class GameScreen extends ScreenAdapter {
         scene = new Scene(assInstances);
     }
 
+    public Scene getScene() {
+        return scene;
+    }
+
     @Override
     public void render(float delta) {
         assInstance.updateAnimations();

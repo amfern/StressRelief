@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.math.Vector3;
 
 public class Scene {
     private Array<ModelInstance> instances;
@@ -34,8 +35,9 @@ public class Scene {
 
     private Camera createCamera() {
         PerspectiveCamera cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(0, 10f, 10f);
-        cam.lookAt(0,5f,0);
+        cam.position.set(0, 0, 20f);
+        // cam.rotate(new Vector3(0, 0 ,1f), 90f);
+        cam.lookAt(0, 5f, 0);
         cam.near = 1f;
         cam.far = 300f;
         cam.update();
@@ -64,6 +66,11 @@ public class Scene {
             batch.render(instances, env);
             batch.end();
         }
+    }
+
+
+    public Camera getCamera() {
+        return cam;
     }
 
     public void render(float delta) {

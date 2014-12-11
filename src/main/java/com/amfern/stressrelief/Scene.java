@@ -66,6 +66,11 @@ public class Scene {
         }
     }
 
+
+    public Camera getCamera() {
+        return cam;
+    }
+
     public void render(float delta) {
         clearScene();
         renderInstances(batch, env, cam, instances);

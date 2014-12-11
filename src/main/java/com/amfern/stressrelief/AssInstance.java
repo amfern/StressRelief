@@ -4,10 +4,16 @@ import android.util.Log;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.collision.Ray;
 
 public class AssInstance extends ModelInstance {
-    // private Node leftButtNode;
-    // private Node rightButtNode;
+    private static final Vector3 BOUNDING_SPHERE_CENTER = new Vector3(0, 0, 0);
+    private static final float BOUNDING_SPHERE_RADIUS = 6f;
+    private Node leftChickNode;
+    private Node rightChickNode;
 
     // private Vector3 nodeLeftInitialPosition;
     // private Vector3 nodeRightInitialPosition;
@@ -16,8 +22,8 @@ public class AssInstance extends ModelInstance {
     public AssInstance(Model model) {
         super(model);
 
-        // leftButtNode = buttInstance.getNode("leftButt");
-        // rightButtNode = buttInstance.getNode("rightButt");
+        leftChickNode = getNode("leftButt");
+        rightChickNode = getNode("rightButt");
 
         // nodeLeftInitialPosition = leftButtNode.translation.cpy();
         // nodeRightInitialPosition = rightButtNode.translation.cpy();
@@ -44,5 +50,18 @@ public class AssInstance extends ModelInstance {
     // updates the animations
     public void updateAnimations() {
 
+    }
+    
+    public boolean intersectRayAss(Ray ray, Vector3 intersection) {
+        Vector3 offsetCenter = BOUNDING_SPHERE_CENTER.cpy().mul(transform);
+        return Intersector.intersectRaySphere(ray, offsetCenter, BOUNDING_SPHERE_RADIUS, intersection);
+    }
+
+    public Node getLeftChick() {
+        return leftChickNode;
+    }
+
+    public Node getRightChick() {
+        return rightChickNode;
     }
 }

@@ -44,7 +44,7 @@ public class AssController extends GestureAdapter {
         Log.w("stressrelief", "dstLeft: " + dstLeft);
         Log.w("stressrelief", "dstRight: " + dstRight);
 
-        return dstLeft > dstRight ? AssChick.LEFT : AssChick.RIGHT;
+        return dstLeft < dstRight ? AssChick.LEFT : AssChick.RIGHT;
     }
     
     // checks if the touch occured on mesh

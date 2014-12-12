@@ -5,7 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g3d.Model;
 
 public class LoadingScreen extends ScreenAdapter {
-    private static final String BUTT_MODEL_PATH = "butt.g3dj";
+    private static final String BUTT_MODEL_PATH = "butt.g3db";
 
     private AssetManager assets;
     private LoadingScreenListener listener;

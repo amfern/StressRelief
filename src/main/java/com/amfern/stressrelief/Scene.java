@@ -10,22 +10,24 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 
 public class Scene {
-    private Array<ModelInstance> instances;
+    private Texture background;
     private ModelBatch batch;
+    private SpriteBatch spriteBatch;
     private Environment env;
     private Camera cam;
     private BaseLight light;
 
     // constructor
-    public Scene(ModelInstance[] instances) {
-        this.instances = new Array<ModelInstance>(instances);
-
+    public Scene() {
         batch = new ModelBatch();
+        spriteBatch = new SpriteBatch();
         env = new Environment();
         cam = createCamera();
         light = createLight();
@@ -55,9 +57,11 @@ public class Scene {
         env.add(light);
     }
 
-    private void clearScene() {
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+    private void renderBackground(SpriteBatch spriteBatch, Texture background) {
+        spriteBatch.begin();
+        spriteBatch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        spriteBatch.end();
     }
 
     private void renderInstances(ModelBatch batch, Environment env, Camera cam, Array<ModelInstance> instances) {
@@ -68,17 +72,25 @@ public class Scene {
         }
     }
 
-
-    public Camera getCamera() {
-        return cam;
+    public void clear() {
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(float delta) {
-        clearScene();
+    public void renderBackground(Texture background) {
+        renderBackground(spriteBatch, background);
+    }
+
+    public void renderInstances(Array<ModelInstance> instances) {
         renderInstances(batch, env, cam, instances);
     }
 
     public void dispose() {
-        batch.dispose();;
+        batch.dispose();
+        spriteBatch.dispose();
+    }
+
+    public Camera getCamera() {
+        return cam;
     }
 }

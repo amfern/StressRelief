@@ -1,19 +1,29 @@
 package com.amfern.stressrelief;
 
+import com.badlogic.gdx.utils.Array;
+
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 
 public class GameScreen extends ScreenAdapter {
     Scene scene;
     AssInstance assInstance;
+    Texture background;
 
     // constructor
-    public GameScreen(AssInstance assInstance) {
+    public GameScreen(AssInstance assInstance, Texture background) {
         super();
         this.assInstance = assInstance;
+        this.background = background;
 
-        AssInstance[] assInstances = new AssInstance[]{ assInstance };
+        scene = new Scene();
+    }
 
-        scene = new Scene(assInstances);
+    private void renderScene(Scene scene, AssInstance instance, Texture background) {
+        scene.clear();
+        scene.renderBackground(background);
+        scene.renderInstances(new Array<ModelInstance>( new ModelInstance[] { instance } ));
     }
 
     public Scene getScene() {
@@ -23,7 +33,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         assInstance.updateAnimations();
-        scene.render(delta);
+        renderScene(scene, assInstance, background);
     }
 
     @Override

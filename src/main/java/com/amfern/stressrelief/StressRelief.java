@@ -8,12 +8,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
 
 class StressRelief extends Game implements LoadingScreenListener {
     AssController assController;
 
     @Override
-    public void doneLoading(Model assModel) {
+    public void doneLoading(Model assModel, Texture background) {
         AssInstance assInstance;
 
         try {
@@ -25,7 +26,7 @@ class StressRelief extends Game implements LoadingScreenListener {
             return;
         }
 
-        GameScreen gScreen = new GameScreen(assInstance);
+        GameScreen gScreen = new GameScreen(assInstance, background);
         Camera cam = gScreen.getScene().getCamera();
         
         setScreen(gScreen);

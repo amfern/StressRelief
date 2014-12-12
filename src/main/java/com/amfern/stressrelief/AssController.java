@@ -40,10 +40,6 @@ public class AssController extends GestureAdapter {
         float dstLeft = dstPointNode(touchWorldCoord, leftChick);
         float dstRight = dstPointNode(touchWorldCoord, rightChick);
 
-        Log.w("stressrelief", "touchWorldCoord: " + touchWorldCoord);
-        Log.w("stressrelief", "dstLeft: " + dstLeft);
-        Log.w("stressrelief", "dstRight: " + dstRight);
-
         return dstLeft < dstRight ? AssChick.LEFT : AssChick.RIGHT;
     }
     

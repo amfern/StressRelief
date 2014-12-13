@@ -36,10 +36,10 @@ public class Scene {
     }
 
     private Camera createCamera() {
-        PerspectiveCamera cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        cam.position.set(0, 0, 20f);
+        PerspectiveCamera cam = new PerspectiveCamera(62.53f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cam.position.set(0.01741587301f, 0.0678f, 4.11821587302f);
         // cam.rotate(new Vector3(0, 0 ,1f), 90f);
-        cam.lookAt(0, 5f, 0);
+        // cam.lookAt(0, 0, 0);
         cam.near = 1f;
         cam.far = 300f;
         cam.update();

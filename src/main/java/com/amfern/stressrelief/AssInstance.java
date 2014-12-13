@@ -15,19 +15,22 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
 public class AssInstance extends ModelInstance implements AnimationController.AnimationListener {
-    private static final Vector3 BOUNDING_SPHERE_CENTER = new Vector3(0, 3f, 0);
-    private static final float BOUNDING_SPHERE_RADIUS = 6f;
-    private static final String IDLE_ANIMATION = "idle";
-    private static final String BOUNCE_ANIMATION = "bounce";
-    private static final String LEFT_FLICK_ANIMATION = "left_flick";
-    private static final String RIGHT_FLICK_ANIMATION = "right_flick";
-    private static final String LEFT_NODE_ID = "leftButt";
-    private static final String RIGHT_NODE_ID = "rightButt";
-    private static final float TRANSITION_TIME = 1f;
+    private static final Vector3 BOUNDING_SPHERE_CENTER = new Vector3(0, 0.5f, 0);
+    private static final float BOUNDING_SPHERE_RADIUS = 1.8f;
+    private static final String IDLE_ANIMATION = "Static";
+    private static final String BOUNCE_ANIMATION = "Bouncing";
+    private static final String LEFT_FLICK_ANIMATION = "SlapLeftCheek";
+    private static final String RIGHT_FLICK_ANIMATION = "SlapRightCheek";
+    private static final String LEFT_NODE_ID = "Assbone_L";
+    private static final String RIGHT_NODE_ID = "Assbone_R";
+    private static final float TRANSITION_TIME = 0.3f;
+    private static final float SPEED = 1f;
+
     
     private Node leftChickNode;
     private Node rightChickNode;
     private AnimationController animController;
+    private AnimationDesc idleAnimationDesc;
 
     // private Vector3 nodeLeftInitialPosition;
     // private Vector3 nodeRightInitialPosition;
@@ -36,13 +39,14 @@ public class AssInstance extends ModelInstance implements AnimationController.An
     public AssInstance(Model model) throws Exception {
         super(model);
 
-        validateModel(model);
+        // validateModel(model);
 
         leftChickNode = getNode(LEFT_NODE_ID);
         rightChickNode = getNode(RIGHT_NODE_ID);
 
         animController = new AnimationController(this);
-        animController.setAnimation(IDLE_ANIMATION, -1);
+        animController.allowSameAnimation = true;
+        idleAnimationDesc = animController.setAnimation(IDLE_ANIMATION, -1, SPEED, this);
 
         // nodeLeftInitialPosition = leftButtNode.translation.cpy();
         // nodeRightInitialPosition = rightButtNode.translation.cpy();
@@ -114,18 +118,15 @@ public class AssInstance extends ModelInstance implements AnimationController.An
     // animations
     // ------------------------------------------------
     public void playBounce() {
-        animController.action(BOUNCE_ANIMATION, 1, 1f, this, TRANSITION_TIME);
-        Log.w("stressrelief", "playing animation: playBounce");
+        animController.action(BOUNCE_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
     }
 
     public void playLeftFlick() {
-        animController.action(LEFT_FLICK_ANIMATION, 1, 1f, this, TRANSITION_TIME);
-        Log.w("stressrelief", "playing animation: playLeftFlick");
+        animController.action(LEFT_FLICK_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
     }
 
     public void playRightFlick() {
-        animController.action(RIGHT_FLICK_ANIMATION, 1, 1f, this, TRANSITION_TIME);
-        Log.w("stressrelief", "playing animation: playRightFlick");
+        animController.action(RIGHT_FLICK_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
     }
 
     // updates the animations

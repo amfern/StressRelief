@@ -16,6 +16,7 @@ public class Main extends AndroidApplication {
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useAccelerometer = false;
         cfg.useCompass = false;
+        cfg.numSamples = 4;
 
         initialize(new StressRelief(), cfg);
     }

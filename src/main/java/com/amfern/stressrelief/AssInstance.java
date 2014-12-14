@@ -14,6 +14,25 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
+
+class BouncingAnimationStop implements AnimationController.AnimationListener {
+    private AnimationController animController;
+
+    public BouncingAnimationStop(AnimationController animController) {
+        this.animController = animController;
+    }
+
+    @Override
+    public void onEnd(AnimationDesc animation) {
+        animController.paused = true;
+    }
+
+    @Override
+    public void onLoop(AnimationDesc animation) {
+
+    }
+}
+
 public class AssInstance extends ModelInstance implements AnimationController.AnimationListener {
     private static final Vector3 BOUNDING_SPHERE_CENTER = new Vector3(0, 0.5f, 0);
     private static final float BOUNDING_SPHERE_RADIUS = 1.8f;
@@ -30,7 +49,9 @@ public class AssInstance extends ModelInstance implements AnimationController.An
     private Node leftChickNode;
     private Node rightChickNode;
     private AnimationController animController;
-    private AnimationDesc idleAnimationDesc;
+    private AnimationDesc bournceAnimationDesc;
+    private AnimationDesc rightFlickAnimationDesc;
+    private AnimationDesc leftFlickAnimationDesc;
 
     // private Vector3 nodeLeftInitialPosition;
     // private Vector3 nodeRightInitialPosition;
@@ -46,7 +67,7 @@ public class AssInstance extends ModelInstance implements AnimationController.An
 
         animController = new AnimationController(this);
         animController.allowSameAnimation = true;
-        idleAnimationDesc = animController.setAnimation(IDLE_ANIMATION, -1, SPEED, this);
+        animController.setAnimation(IDLE_ANIMATION, -1, SPEED, this);
 
         // nodeLeftInitialPosition = leftButtNode.translation.cpy();
         // nodeRightInitialPosition = rightButtNode.translation.cpy();
@@ -105,9 +126,23 @@ public class AssInstance extends ModelInstance implements AnimationController.An
         validateAnimations(model.animations);
     }
 
+    private float getOffsetTime(AnimationDesc animationDesc) {
+        if(animationDesc == null) {
+            return 0f;
+        }
+
+        if(animationDesc.time >= 1f) {
+            return 0f;
+        }
+
+        return animationDesc.time;
+    }
+
     @Override
     public void onEnd(AnimationDesc animation) {
-
+        leftFlickAnimationDesc = null;
+        rightFlickAnimationDesc = null;
+        bournceAnimationDesc = null;
     }
 
     @Override
@@ -117,16 +152,30 @@ public class AssInstance extends ModelInstance implements AnimationController.An
 
     // animations
     // ------------------------------------------------
+    public void playBounceStart() {
+        bournceAnimationDesc = animController.action(BOUNCE_ANIMATION, getOffsetTime(bournceAnimationDesc), 0.5f, 1, SPEED, new BouncingAnimationStop(animController), TRANSITION_TIME);
+        // animController.action(BOUNCE_ANIMATION, 0f, 0.5f, 1, SPEED, new BouncingAnimationStop(animController), TRANSITION_TIME);
+    }
+
+    public void playBounceEnd() {
+        bournceAnimationDesc = null;
+        animController.paused = false;
+        // float offset = getOffsetTime(bournceAnimationDesc);
+        // offset = offset <= 0.5f ? 0.5f : offset;
+        // bournceAnimationDesc = animController.action(BOUNCE_ANIMATION, getOffsetTime(bournceAnimationDesc), -1f, 1, SPEED, this, TRANSITION_TIME);
+        animController.action(BOUNCE_ANIMATION, 0.5f, -1f, 1, SPEED, this, TRANSITION_TIME);
+    }
+
     public void playBounce() {
         animController.action(BOUNCE_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
     }
 
     public void playLeftFlick() {
-        animController.action(LEFT_FLICK_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
+        leftFlickAnimationDesc = animController.action(LEFT_FLICK_ANIMATION, getOffsetTime(leftFlickAnimationDesc), -1f, 1, SPEED, this, TRANSITION_TIME);
     }
 
     public void playRightFlick() {
-        animController.action(RIGHT_FLICK_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
+        rightFlickAnimationDesc = animController.action(RIGHT_FLICK_ANIMATION, getOffsetTime(rightFlickAnimationDesc), -1f, 1, SPEED, this, TRANSITION_TIME);
     }
 
     // updates the animations

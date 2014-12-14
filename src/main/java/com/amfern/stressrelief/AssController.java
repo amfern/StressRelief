@@ -18,6 +18,7 @@ enum AssChick {
 
 public class AssController extends GestureAdapter {
     boolean isTouched = false;
+    boolean isBouncing = false;
     AssInstance assInstance;
     Camera cam;
 
@@ -78,14 +79,40 @@ public class AssController extends GestureAdapter {
     }
 
     @Override
-    public boolean fling(float velocityX, float velocityY, int button) {
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
         // play bouse animation only on up fling and on mesh touch
-        if(!isTouched || velocityY > 0)
+        if(!isTouched || deltaY > 0)
             return false;
 
-        assInstance.playBounce();
+        assInstance.playBounceStart();
         
         isTouched = false;
+        isBouncing = true;
+        return true;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        // play bouse animation only on up fling and on mesh touch
+        if(!isBouncing && !isTouched)
+            return false;
+
+        assInstance.playBounceEnd();
+        
+        isTouched = false;
+        return true;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        // play bouse animation only on up fling and on mesh touch
+        if(!isBouncing && (!isTouched || velocityY > 0))
+            return false;
+
+        assInstance.playBounceEnd();
+        
+        isTouched = false;
+        isBouncing = false;
         return true;
     }
 }

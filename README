@@ -16,3 +16,16 @@ if you upgrade libgdx, you have to update native files in jniLibs as-well
 To convert fbx files
 export LD_LIBRARY_PATH=/tmp
 ./fbx-conv-lin64 -f -v -o [G3db|G3dj] [FBX_FILE_PATH]
+
+
+1 blendr unit / 3.15 = 1f
+
+
+loop through
+1. bounce consits of 2 animations, the looping bounce and the jumping after wards animation - pending david
+2. export the model without baking animation
+3. start the slap animation from frame 4
+4. hold screen on while 
+5. replace background image with the one david using
+
+

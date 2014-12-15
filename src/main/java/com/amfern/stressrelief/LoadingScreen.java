@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class LoadingScreen extends ScreenAdapter {
     private static final String BUTT_MODEL_PATH = "butt.g3db";
-    private static final String BACKGROUND_PATH = "background.png";
+    private static final String BACKGROUND_PATH = "BG.jpg";
 
     private AssetManager assets;
     private LoadingScreenListener listener;

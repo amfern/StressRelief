@@ -103,16 +103,28 @@ public class AssController extends GestureAdapter {
         return true;
     }
 
+    // @Override
+    // public boolean fling(float velocityX, float velocityY, int button) {
+    //     // play bouse animation only on up fling and on mesh touch
+    //     if(!isBouncing && (!isTouched || velocityY > 0))
+    //         return false;
+
+    //     assInstance.playBounceEnd();
+        
+    //     isTouched = false;
+    //     isBouncing = false;
+    //     return true;
+    // }
+
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
         // play bouse animation only on up fling and on mesh touch
-        if(!isBouncing && (!isTouched || velocityY > 0))
+        if(isTouched || velocityY > 0)
             return false;
 
-        assInstance.playBounceEnd();
+        assInstance.playBounce();
         
         isTouched = false;
-        isBouncing = false;
         return true;
     }
 }

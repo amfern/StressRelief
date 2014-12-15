@@ -48,8 +48,10 @@ public class AssInstance extends ModelInstance implements AnimationController.An
     
     private Node leftChickNode;
     private Node rightChickNode;
+    private AnimationController idleAnimControllerFlick;
     private AnimationController leftAnimControllerFlick;
     private AnimationController rightAnimControllerFlick;
+    private AnimationController bounceAnimControllerFlick;
     private AnimationDesc bournceAnimationDesc;
     private AnimationDesc rightFlickAnimationDesc;
     private AnimationDesc leftFlickAnimationDesc;
@@ -66,11 +68,17 @@ public class AssInstance extends ModelInstance implements AnimationController.An
         leftChickNode = getNode(LEFT_NODE_ID);
         rightChickNode = getNode(RIGHT_NODE_ID);
 
+        idleAnimControllerFlick = new AnimationController(this); 
         leftAnimControllerFlick = new AnimationController(this);
-        leftAnimControllerFlick.allowSameAnimation = true;
         rightAnimControllerFlick = new AnimationController(this);
+        bounceAnimControllerFlick = new AnimationController(this);
+
+        idleAnimControllerFlick.allowSameAnimation = true;
+        leftAnimControllerFlick.allowSameAnimation = true;
         rightAnimControllerFlick.allowSameAnimation = true;
-        // animController.setAnimation(IDLE_ANIMATION, -1, SPEED, this);
+        bounceAnimControllerFlick.allowSameAnimation = true;
+
+        idleAnimControllerFlick.setAnimation(IDLE_ANIMATION, -1, SPEED, this);
 
         // nodeLeftInitialPosition = leftButtNode.translation.cpy();
         // nodeRightInitialPosition = rightButtNode.translation.cpy();
@@ -143,9 +151,9 @@ public class AssInstance extends ModelInstance implements AnimationController.An
 
     @Override
     public void onEnd(AnimationDesc animation) {
-        leftFlickAnimationDesc = null;
-        rightFlickAnimationDesc = null;
-        bournceAnimationDesc = null;
+        // leftFlickAnimationDesc = null;
+        // rightFlickAnimationDesc = null;
+        // bournceAnimationDesc = null;
     }
 
     @Override
@@ -170,6 +178,8 @@ public class AssInstance extends ModelInstance implements AnimationController.An
     }
 
     public void playBounce() {
+        // bounceAnimControllerFlick.animate(BOUNCE_ANIMATION, TRANSITION_TIME);
+        idleAnimControllerFlick.action(BOUNCE_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
         // animController.action(BOUNCE_ANIMATION, 1, SPEED, this, TRANSITION_TIME);
     }
 
@@ -185,6 +195,8 @@ public class AssInstance extends ModelInstance implements AnimationController.An
 
     // updates the animations
     public void updateAnimations() {
+        idleAnimControllerFlick.update(Gdx.graphics.getDeltaTime());
+        // bounceAnimControllerFlick.update(Gdx.graphics.getDeltaTime());
         leftAnimControllerFlick.update(Gdx.graphics.getDeltaTime());
         rightAnimControllerFlick.update(Gdx.graphics.getDeltaTime());
     }
